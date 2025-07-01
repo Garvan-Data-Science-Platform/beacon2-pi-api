@@ -3,7 +3,7 @@ open_api_endpoints_definition='https://raw.githubusercontent.com/ga4gh-beacon/be
 database='mongo' # The name must match the folder's name in connection that belongs to the desired database.
 
 # Granularity accepted: boolean, count or record
-granularity='record'
+granularity='boolean'
 
 # Entry type info
 id='cohort'
@@ -21,9 +21,9 @@ allow_queries_without_filters=True
 
 # Map configuration
 singleEntryUrl=True # True if your beacon enables endpoint cohorts/{id}
-analysis_lookup=True # True if your beacon enables endpoint cohorts/{id}/analyses
-biosample_lookup=True # True if your beacon enables endpoint cohorts/{id}/biosamples
-dataset_lookup=True # True if your beacon enables endpoint cohorts/{id}/datasets
-genomicVariant_lookup=True # True if your beacon enables endpoint cohorts/{id}/g_variants
-individual_lookup=True # True if your beacon enables endpoint cohorts/{id}/individuals
-run_lookup=True # True if your beacon enables endpoint cohorts/{id}/runs
+analysis_lookup=False # True if your beacon enables endpoint cohorts/{id}/analyses
+biosample_lookup=False # True if your beacon enables endpoint cohorts/{id}/biosamples
+dataset_lookup=False # True if your beacon enables endpoint cohorts/{id}/datasets
+genomicVariant_lookup=False # True if your beacon enables endpoint cohorts/{id}/g_variants
+individual_lookup=False # True if your beacon enables endpoint cohorts/{id}/individuals
+run_lookup=False # True if your beacon enables endpoint cohorts/{id}/runs
