@@ -12,8 +12,8 @@ except Exception as e:# pragma: no cover
 
 level=logging.NOTSET
 log_file=None
-beacon_id = 'org.garvan.rddp-beacon'  # ID of the Beacon
-beacon_name = 'Garvan RDDP cohort-level beacon'  # Name of the Beacon service
+beacon_id="org.garvan.rddp-beacon"
+beacon_name="Garvan RDDP cohort-level beacon"
 api_version = 'v2.0.0' # Version of the Beacon implementation
 uri = 'http://localhost:5050'
 uri_subpath = '/api'
@@ -36,13 +36,13 @@ ga4gh_service_type_artifact = 'beacon'
 ga4gh_service_type_version = '1.0'
 
 # Organization info
-org_id = 'Garvan'  # Id of the organization
-org_name = 'Garvan Institute for Medical Research'  # Full name
-org_description = 'Garvan Institute of Medical Research is one of Australia’s premier medical research institutes '
+org_id="Garvan"
+org_name="Garvan Institute for Medical Research"
+org_description="Garvan Institute of Medical Research is one of Australia’s premier medical research institutes"
 org_adress = '384 Victoria Street, Darlinghurst NSW 2010, Australia'
-org_welcome_url = 'https://garvan.org.au'
-org_contact_url = 'mailto:dsp@garvan.org.au'
-org_logo_url = 'https://images.contentstack.io/v3/assets/blt324fd0a04af716e6/blt3f0048229394c515/6405de96205f2b7a60b745d6/gimr-logo.png'
+org_welcome_url="https://garvan.org.au"
+org_contact_url="mailto:dsp@garvan.org.au"
+org_logo_url="https://images.contentstack.io/v3/assets/blt324fd0a04af716e6/blt3f0048229394c515/6405de96205f2b7a60b745d6/gimr-logo.png"
 org_info = ''
 
 # Certificates
