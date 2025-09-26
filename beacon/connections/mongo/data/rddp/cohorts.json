@@ -254,7 +254,7 @@
                 }
             ]
         },
-        "name": "syntheticCohort",
+        "name": "RDDP syntheticCohort test",
         "datasetId": "Garvan RDDP test"
     }
 ]
