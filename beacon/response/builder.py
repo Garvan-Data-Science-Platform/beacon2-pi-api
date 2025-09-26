@@ -34,9 +34,14 @@ async def collection_builder(self, qparams):
         import importlib
         module = importlib.import_module(complete_module, package=None)
         response_converted, count, entity_schema = await module.execute_collection_function(self, qparams)
-        response = build_beacon_count_response(
-                    self, response_converted, count, qparams, entity_schema
-                )
+        # Add granularity handling similar to builder function
+        if qparams.query.includeResultsetResponses != 'NONE':
+            response = build_beacon_collection_response(self, response_converted, count, qparams, entity_schema)
+        elif qparams.query.includeResultsetResponses == 'NONE' and RequestAttributes.allowed_granularity in ['count','record'] and granularity in ['count', 'record']:
+            response = build_beacon_count_response(self, response_converted, count, qparams, entity_schema)
+        else:
+            response = build_beacon_boolean_response(self, count, qparams, entity_schema)
+        
         return response
     except Exception:# pragma: no cover
         raise
