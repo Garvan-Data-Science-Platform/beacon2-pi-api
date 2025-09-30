@@ -1,0 +1,81 @@
+# This file defines the MongoDB database itself using a StatefulSet for stable storage
+# and a Service for a stable network address.
+
+# --- Headless Service for MongoDB ---
+# This gives the StatefulSet a stable network DNS name ("mongo-service")
+# that other pods can use to connect to the database.
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-service
+spec:
+  clusterIP: None # This makes it a "headless" service
+  selector:
+    app: mongo
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+
+---
+# --- StatefulSet for MongoDB ---
+# The primary workload for running the database pod.
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+spec:
+  serviceName: "mongo-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+        - name: mongoprod
+          image: mongo:5
+          command:
+            ["mongod", "--wiredTigerCacheSizeGB", "1.0", "--bind_ip", "0.0.0.0"]
+          ports:
+            - containerPort: 27017
+          env:
+            # Load credentials and database name securely from the Secret/plain value
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_INITDB_ROOT_USERNAME
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_INITDB_ROOT_PASSWORD
+            - name: MONGO_INITDB_DATABASE
+              value: "beacon"
+          volumeMounts:
+            # Mount the persistent storage for the database files
+            - name: mongo-persistent-storage
+              mountPath: /data/db
+            # Mount the init script from our ConfigMap
+            - name: mongo-init-script
+              mountPath: /docker-entrypoint-initdb.d/init-script.js
+              subPath: init-script.js
+      volumes:
+        # Define the volume for the init script, referencing the ConfigMap
+        - name: mongo-init-script
+          configMap:
+            name: mongo-init-cm
+  # Define the volume claim that connects to our PVC for data persistence
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-persistent-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "" # Use the default storage class or your specific one
+        resources:
+          requests:
+            storage: 2Gi

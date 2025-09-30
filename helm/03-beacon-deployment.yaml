@@ -1,0 +1,61 @@
+# This file defines your main Python application and a Service to expose it.
+# The ConfigMaps it depends on should be created separately using kubectl commands.
+
+# --- Deployment for the Beaconprod Application ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beaconprod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beaconprod
+  template:
+    metadata:
+      labels:
+        app: beaconprod
+    spec:
+      containers:
+        - name: beaconprod
+          image: docker.io/library/beacon2-pi-api-beaconprod:latest
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "beacon"]
+          ports:
+            - containerPort: 5050
+          volumeMounts:
+            # Mount the conf.py file from its ConfigMap
+            - name: config-volume
+              mountPath: /beacon/conf/conf.py
+              subPath: conf.py
+            # Mount the permissions directory from its ConfigMap
+            - name: permissions-volume
+              mountPath: /beacon/permissions
+            # NOTE: The log file is omitted. The best practice in Kubernetes is to
+            # write logs to standard output (stdout) and view them with `kubectl logs`.
+            # If a file is required, a separate PVC would be needed for it.
+      volumes:
+        - name: config-volume
+          configMap:
+            name: beacon-config-cm
+        - name: permissions-volume
+          configMap:
+            name: beacon-permissions-cm
+
+---
+# --- Service to Expose Beaconprod ---
+# This creates a stable endpoint to access your application.
+apiVersion: v1
+kind: Service
+metadata:
+  name: beaconprod-service
+spec:
+  type: NodePort # Use LoadBalancer in a real cloud environment
+  selector:
+    app: beaconprod
+  ports:
+    - protocol: TCP
+      port: 5050 # Port inside the cluster
+      targetPort: 5050 # Port on the pod
+      nodePort: 30050 # External port to access (e.g., http://<minikube-ip>:30050)
+
