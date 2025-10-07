@@ -31,9 +31,6 @@ spec:
             # Mount the permissions directory from its ConfigMap
             - name: permissions-volume
               mountPath: /beacon/permissions
-            # NOTE: The log file is omitted. The best practice in Kubernetes is to
-            # write logs to standard output (stdout) and view them with `kubectl logs`.
-            # If a file is required, a separate PVC would be needed for it.
       volumes:
         - name: config-volume
           configMap:
