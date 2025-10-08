@@ -30,7 +30,7 @@ spec:
               subPath: conf.py
             # Mount the permissions directory from its ConfigMap
             - name: permissions-volume
-              mountPath: /beacon/permissions
+              mountPath: /beacon/permissions/datasets/
       volumes:
         - name: config-volume
           configMap:

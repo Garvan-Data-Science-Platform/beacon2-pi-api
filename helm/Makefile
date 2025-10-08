@@ -18,7 +18,7 @@ kube-vol:
 config:
 	kubectl create configmap mongo-init-cm --from-file=init-script.js=../beacon/connections/mongo/mongo-init/init.js
 	kubectl create configmap beacon-config-cm --from-file=conf.py=../beacon/conf/conf.py
-	kubectl create configmap beacon-permissions-cm --from-file=../beacon/permissions/
+	kubectl create configmap beacon-permissions-cm --from-file=../beacon/permissions/datasets/datasets_permissions.yml
 
 k8s-apply:
 	kubectl apply -f .
