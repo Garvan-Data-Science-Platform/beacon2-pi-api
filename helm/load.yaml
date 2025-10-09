@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+        - name: load
+          image: mongo:5
+          command: ["mongoimport", "--help"]
+      restartPolicy: Never
