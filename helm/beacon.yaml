@@ -1,7 +1,3 @@
-# This file defines your main Python application and a Service to expose it.
-# The ConfigMaps it depends on should be created separately using kubectl commands.
-
-# --- Deployment for the Beaconprod Application ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,11 +20,9 @@ spec:
           ports:
             - containerPort: 5050
           volumeMounts:
-            # Mount the conf.py file from its ConfigMap
             - name: config-volume
               mountPath: /beacon/conf/conf.py
               subPath: conf.py
-            # Mount the permissions directory from its ConfigMap
             - name: permissions-volume
               mountPath: /beacon/permissions/datasets/
       volumes:
@@ -40,8 +34,6 @@ spec:
             name: beacon-permissions-cm
 
 ---
-# --- Service to Expose Beaconprod ---
-# This creates a stable endpoint to access your application.
 apiVersion: v1
 kind: Service
 metadata:
@@ -52,7 +44,7 @@ spec:
     app: beaconprod
   ports:
     - protocol: TCP
-      port: 5050 # Port inside the cluster
-      targetPort: 5050 # Port on the pod
+      port: 5050
+      targetPort: 5050
       nodePort: 30050 # External port to access (e.g., http://<minikube-ip>:30050)
 

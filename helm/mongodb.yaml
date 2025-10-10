@@ -13,7 +13,6 @@ spec:
     path: "/mnt/data/mongo" # This path must exist on your Minikube node
 
 ---
-# --- Secret for MongoDB Credentials ---
 apiVersion: v1
 kind: Secret
 metadata:
@@ -23,9 +22,6 @@ stringData:
   MONGO_INITDB_ROOT_USERNAME: "root"
   MONGO_INITDB_ROOT_PASSWORD: "example"
 ---
-# --- Headless Service for MongoDB ---
-# This gives the StatefulSet a stable network DNS name ("mongo-service")
-# that other pods can use to connect to the database.
 apiVersion: v1
 kind: Service
 metadata:
@@ -40,8 +36,6 @@ spec:
       targetPort: 27017
 
 ---
-# --- StatefulSet for MongoDB ---
-# The primary workload for running the database pod.
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -81,25 +75,21 @@ spec:
             - name: MONGO_INITDB_DATABASE
               value: "beacon"
           volumeMounts:
-            # Mount the persistent storage for the database files
             - name: mongo-persistent-storage
               mountPath: /data/db
-            # Mount the init script from our ConfigMap
             - name: mongo-init-script
-              mountPath: /docker-entrypoint-initdb.d/init-script.js
-              subPath: init-script.js
+              mountPath: /docker-entrypoint-initdb.d/init.js
               readOnly: true
       volumes:
         - name: mongo-init-script
           configMap:
             name: mongo-init-cm
-  # Define the volume claim that connects to our PVC for data persistence
   volumeClaimTemplates:
     - metadata:
         name: mongo-persistent-storage
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: "" # Use the default storage class or your specific one
+        storageClassName: ""
         resources:
           requests:
             storage: 2Gi
