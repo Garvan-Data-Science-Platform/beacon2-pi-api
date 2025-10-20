@@ -1,5 +1,5 @@
 #### Input and Output files config parameters ####
-csv_folder = './csv/examples/test/'
+csv_folder = './csv/rddp/'
 output_docs_folder='./output_docs/'
 
 #### VCF Conversion config parameters ####
