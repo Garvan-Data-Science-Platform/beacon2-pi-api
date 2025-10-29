@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beaconprod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beaconprod
+  template:
+    metadata:
+      labels:
+        app: beaconprod
+    spec:
+      containers:
+        - name: beaconprod
+          image: docker.io/library/beacon2-pi-api-beaconprod:latest
+          imagePullPolicy: IfNotPresent
+          command: ["python", "-m", "beacon"]
+          ports:
+            - containerPort: 5050
+          volumeMounts:
+            - name: config-volume
+              mountPath: /beacon/conf/conf.py
+              subPath: conf.py
+            - name: permissions-volume
+              mountPath: /beacon/permissions/datasets/
+      volumes:
+        - name: config-volume
+          configMap:
+            name: beacon-config-cm
+        - name: permissions-volume
+          configMap:
+            name: beacon-permissions-cm
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beaconprod-service
+spec:
+  type: NodePort # Use LoadBalancer in a real cloud environment
+  selector:
+    app: beaconprod
+  ports:
+    - protocol: TCP
+      port: 5050
+      targetPort: 5050
+      nodePort: 30050 # External port to access (e.g., http://<minikube-ip>:30050)
+

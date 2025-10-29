@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      initContainers:
+        - name: load-mongo
+          image: mongo:5
+          command:
+            [
+              "sh",
+              "-c",
+              'mongoimport --jsonArray --uri "mongodb://root:example@mongo:27017/beacon?authSource=admin" --file /tmp/cohorts.json --collection cohorts',
+            ]
+          volumeMounts:
+            - name: mongo-data-volume
+              mountPath: /tmp/
+        - name: reindex
+          image: docker.io/library/beacon2-pi-api-beaconprod:latest
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c", "python -m beacon.connections.mongo.reindex"]
+        - name: extract-filtering-terms
+          image: docker.io/library/beacon2-pi-api-beaconprod:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            [
+              "sh",
+              "-c",
+              "python -m beacon.connections.mongo.extract_filtering_terms",
+            ]
+      containers:
+        - name: get-descendants
+          image: docker.io/library/beacon2-pi-api-beaconprod:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            ["sh", "-c", "python -m beacon.connections.mongo.get_descendants"]
+      restartPolicy: Never
+      volumes:
+        - name: mongo-data-volume
+          configMap:
+            name: mongo-cohort-data-cm
