@@ -29,7 +29,7 @@ mongodb:
 
   localDev:
     createHostPathPV: true # Only for local dev
-    hostPath: "/mnt/data/mongo"
+    hostPath: "/mnt/data/mongo" # This path must exist in local minikube cluster
 
 beacon:
   selectorLabel: "beaconprod"

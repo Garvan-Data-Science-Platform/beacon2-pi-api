@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: mongoprod
-          image: "{{ .Values.mongodb.image.repository }}:{{ .Valupes.mongodb.image.tag }}"
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
           args:
             - "--wiredTigerCacheSizeGB"
             - {{ .Values.mongodb.config.wiredTigerCacheSizeGB | quote }}
@@ -32,26 +32,29 @@ spec:
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret
+                  name: {{ .Values.mongodb.secret.name | default (printf "%s-secret" .Release.Name)}}
                   key: MONGO_INITDB_ROOT_PASSWORD
             - name: MONGO_INITDB_DATABASE
-              value: "beacon"
+              value: {{ .Values.mongodb.database | quote }}
           volumeMounts:
             - name: mongo-persistent-storage
               mountPath: /data/db
             - name: mongo-init-script
               mountPath: /docker-entrypoint-initdb.d/init.js
+              subPath: init.js
               readOnly: true
       volumes:
         - name: mongo-init-script
           configMap:
-            name: mongo-init-cm
+            name: {{ .Values.mongodb.initScriptConfigMap }}
+  {{- if .Values.mongodb.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: mongo-persistent-storage
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: ""
+        storageClassName: {{ .Values.mongodb.persistence.storageClass | quote }}
         resources:
           requests:
-            storage: 2Gi
+            storage: {{ .Values.mongodb.persistence.size }}
+  {{- end }}

@@ -1,7 +1,7 @@
 apiVersion: v2
 name: beacon
-description: A Helm chart for Kubernetes
-
+description: A Helm chart for k8s Beacon
+icon: https://avatars.githubusercontent.com/u/33450937?s=48&v=4
 # A chart can be either an 'application' or a 'library' chart.
 #
 # Application charts are a collection of templates that can be packaged into versioned archives
