@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-mongo-headless
+spec:
+  clusterIP: None
+  selector:
+    app: {{ .Values.mongodb.selectorLabel }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.mongodb.service.port }}
+      targetPort: {{ .Values.mongodb.service.port }}

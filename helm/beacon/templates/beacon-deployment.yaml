@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-beacon
+spec:
+  replicas: {{ .Values.beacon.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.beacon.selectorLabel }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.beacon.selectorLabel }}
+    spec:
+      containers:
+        - name: beaconprod
+          image: "{{ .Values.beacon.image.repository }}:{{ .Values.beacon.image.tag }}"
+          imagePullPolicy: {{ .Values.beacon.image.pullPolicy }}
+          command: ["python", "-m", "beacon"]
+          ports:
+            - containerPort: {{ .Values.beacon.service.port }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /beacon/conf/conf.py
+              subPath: conf.py
+            - name: permissions-volume
+              mountPath: /beacon/permissions/datasets/
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ .Values.beacon.config.configMapName }}
+        - name: permissions-volume
+          configMap:
+            name: {{ .Values.beacon.config.permissionsMapName }}

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-beacon-service
+spec:
+  type: {{ .Values.beacon.service.type }}
+  selector:
+    app: {{ .Values.beacon.selectorLabel }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.beacon.service.port }}
+      targetPort: {{ .Values.beacon.service.port }}
+	  {{- if and (eq .Values.beacon.service.type "NodePort") .Values.beacon.service.nodePort }}
+      nodePort: {{ .Values.beacon.service.nodePort }}
+	  {{- end }}
