@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-db
 spec:
-  serviceName: {{ .Release.Name }}-mongo-headless
+  serviceName: mongo
   replicas: {{ .Values.mongodb.replicaCount }}
   selector:
     matchLabels:
@@ -35,7 +35,7 @@ spec:
                   name: {{ .Values.mongodb.secret.name | default (printf "%s-secret" .Release.Name)}}
                   key: MONGO_INITDB_ROOT_PASSWORD
             - name: MONGO_INITDB_DATABASE
-              value: {{ .Values.mongodb.database | quote }}
+              value: {{ .Values.mongodb.config.database | quote }}
           volumeMounts:
             - name: mongo-persistent-storage
               mountPath: /data/db
@@ -46,7 +46,7 @@ spec:
       volumes:
         - name: mongo-init-script
           configMap:
-            name: {{ .Values.mongodb.initScriptConfigMap }}
+            name: {{ .Values.mongodb.config.initScriptConfigMap }}
   {{- if .Values.mongodb.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:

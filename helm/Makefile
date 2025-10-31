@@ -1,5 +1,7 @@
 # Local deployment via minikube
 
+LOCAL_DEPLOYMENT:=beacon-local
+
 .PHONY: kube-start help docker kube-vol config apply port-forward load-job delete-load-job \
 	delete-all kube-delete help
 
@@ -34,6 +36,15 @@ delete-load-job: ## Delete load job pod (logs will no longer be accessible)
 
 delete-all: ## Delete all kubernetes resources
 	kubectl delete -f .
+
+install:
+	helm install $(LOCAL_DEPLOYMENT) ./beacon
+
+upgrade:
+	helm upgrade $(LOCAL_DEPLOYMENT) ./beacon
+
+uninstall:
+	helm uninstall $(LOCAL_DEPLOYMENT)
 
 kube-delete: ## Delete minikube cluster
 	minikube delete
