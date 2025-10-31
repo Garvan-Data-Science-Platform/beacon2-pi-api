@@ -48,3 +48,6 @@ beacon:
   config:
     configMapName: "beacon-config-cm"
     permissionsMapName: "beacon-permissions-cm"
+
+dataLoad:
+  dataConfigMapName: "cohort-data-cm"

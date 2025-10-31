@@ -41,4 +41,4 @@ spec:
       volumes:
         - name: mongo-data-volume
           configMap:
-            name: mongo-cohort-data-cm
+            name: {{ .Values.dataLoad.dataConfigMapName }}

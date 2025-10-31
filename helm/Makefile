@@ -28,12 +28,6 @@ apply: ## Apply mongodb and beacon services
 port-forward: ## Port-forward to access api (for example: `make POD=beaconprod-6b46568b6b-6lfc9 port-forward`)
 	kubectl port-forward $(POD) 5050:5050
 
-load-job: ## Run data load job
-	kubectl apply -f load.yaml
-
-delete-load-job: ## Delete load job pod (logs will no longer be accessible)
-	kubectl delete -f load.yaml
-
 delete-all: ## Delete all kubernetes resources
 	kubectl delete -f .
 
@@ -45,6 +39,13 @@ upgrade:
 
 uninstall:
 	helm uninstall $(LOCAL_DEPLOYMENT)
+
+load-job: ## Run data load job
+	helm install cohort-data-load ./beacon-data-load
+	#helm install data-load-$$(date +%Y%m%d%H%M%S) ./beacon-data-load/ -f config/local.yaml
+
+#delete-load-job: ## Delete load job pod (logs will no longer be accessible)
+#	kubectl delete -f load.yaml
 
 kube-delete: ## Delete minikube cluster
 	minikube delete
