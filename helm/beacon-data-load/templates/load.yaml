@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      initContainers:
+        - name: load-mongo
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+          command:
+            [
+              "sh",
+              "-c",
+              'mongoimport --jsonArray --uri "mongodb://{{ .Values.mongodb.secret.username }}:{{ .Values.mongodb.secret.password }}@mongo:{{ .Values.mongodb.service.port }}/{{ .Values.mongodb.config.database }}?authSource=admin" --file /tmp/cohorts.json --collection cohorts',
+            ]
+          volumeMounts:
+            - name: mongo-data-volume
+              mountPath: /tmp/
+        - name: reindex
+          image: "{{ .Values.beacon.image.repository }}:{{ .Values.beacon.image.tag }}"
+          imagePullPolicy: {{ .Values.beacon.image.pullPolicy }}
+          command: ["sh", "-c", "python -m beacon.connections.mongo.reindex"]
+        - name: extract-filtering-terms
+          image: "{{ .Values.beacon.image.repository }}:{{ .Values.beacon.image.tag }}"
+          imagePullPolicy: {{ .Values.beacon.image.pullPolicy }}
+          command:
+            [
+              "sh",
+              "-c",
+              "python -m beacon.connections.mongo.extract_filtering_terms",
+            ]
+      containers:
+        - name: get-descendants
+          image: "{{ .Values.beacon.image.repository }}:{{ .Values.beacon.image.tag }}"
+          imagePullPolicy: {{ .Values.beacon.image.pullPolicy }}
+          command:
+            ["sh", "-c", "python -m beacon.connections.mongo.get_descendants"]
+      restartPolicy: Never
+      volumes:
+        - name: mongo-data-volume
+          configMap:
+            name: mongo-cohort-data-cm
