@@ -1,0 +1,19 @@
+beacon:
+  image:
+    repository: "docker.io/library/beacon2-pi-api-beaconprod" # Locally built image - need to change
+    tag: "latest"
+
+  service:
+    nodePort: null
+
+ingress:
+  enabled: true
+  host: "dev.beacon.dsp.garvan.org.au"
+  backendConfigName: "beacon-iap-config"
+  managedCertName: "beacon-dev-ssl-cert"
+  allowedPaths:
+    - path: /api
+      pathType: Exact
+
+    - path: /api/cohorts
+      pathType: Prefix
