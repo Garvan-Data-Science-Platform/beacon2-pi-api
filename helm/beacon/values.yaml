@@ -38,7 +38,7 @@ beacon:
   image:
     repository: "docker.io/library/beacon2-pi-api-beaconprod" # Locally built image
     tag: "latest"
-    pullPolicy: "IfNotPresent"
+    pullPolicy: "Always"
 
   service:
     type: "NodePort" # Change to LoadBalancer for GKE
