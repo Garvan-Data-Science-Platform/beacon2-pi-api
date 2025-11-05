@@ -41,7 +41,7 @@ beacon:
     pullPolicy: "Always"
 
   service:
-    type: "NodePort" # Change to LoadBalancer for GKE
+    type: "NodePort"
     port: 5050
     nodePort: 30050 # only for local dev
 

@@ -4,6 +4,7 @@ beacon:
     tag: "v1"
 
   service:
+    # type: ClusterIP
     nodePort: null
 
 ingress:
@@ -11,16 +12,20 @@ ingress:
   host: "dev.beacon.dsp.garvan.org.au"
   backendConfigName: "beacon-dev-iap-config"
   managedCertName: "beacon-dev-ssl-cert"
+  staticIpName: "beacon-dev-static-ip"
   allowedPaths:
-    - path: /api
-      pathType: Exact
+    - path: /*
+      pathType: ImplementationSpecific
+  #   - path: /api
+  #     pathType: Exact
 
-    - path: /api/cohorts
-      pathType: Prefix
+  #   - path: /api/cohorts
+  #     pathType: Prefix
 
 localDev:
   createHostPathPV: false
 
 mongodb:
+  selectorLabel: "mongo"
   persistence:
     storageClass: "standard-rwo"
