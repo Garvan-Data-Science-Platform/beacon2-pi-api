@@ -6,10 +6,10 @@ metadata:
   name: {{ .Release.Name }}-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.staticIpName | quote }}
-    # networking.gke.io/managed-certificates: {{ .Values.ingress.managedCertName | quote }}
-    # networking.gke.io/ssl-redirect: "true"
+    networking.gke.io/managed-certificates: {{ .Values.ingress.managedCertName | quote }}
+    networking.gke.io/ssl-redirect: "true"
     kubernetes.io/ingress.class: "gce"
-    kubernetes.io/ingress.allow-http: "true"
+    # kubernetes.io/ingress.allow-http: "true"
 spec:
   ingressClassName: "gce"
   defaultBackend:
