@@ -48,6 +48,7 @@ beacon:
   config:
     configMapName: "beacon-config-cm"
     permissionsMapName: "beacon-permissions-cm"
+    handoversMapName: "beacon-handovers-cm"
 
 ingress:
   enabled: false

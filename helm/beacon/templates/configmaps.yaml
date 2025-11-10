@@ -25,3 +25,13 @@ metadata:
 data:
   datasets_permissions.yml: |
 {{- .Files.Get "files/datasets_permissions.yml" | nindent 4 }}
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.beacon.config.handoversMapName }}
+data:
+  handovers.py: |
+{{- .Files.Get "files/handovers.py" | nindent 4 }}

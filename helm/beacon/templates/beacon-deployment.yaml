@@ -25,6 +25,9 @@ spec:
               subPath: conf.py
             - name: permissions-volume
               mountPath: /beacon/permissions/datasets/
+            - name: handovers-volume
+              mountPath: /beacon/utils/handovers.py
+              subPath: handovers.py
       volumes:
         - name: config-volume
           configMap:
@@ -32,3 +35,6 @@ spec:
         - name: permissions-volume
           configMap:
             name: {{ .Values.beacon.config.permissionsMapName }}
+        - name: handovers-volume
+          configMap:
+            name: {{ .Values.beacon.config.handoversMapName }}
