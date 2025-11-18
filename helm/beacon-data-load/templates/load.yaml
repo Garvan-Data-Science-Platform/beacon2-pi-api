@@ -13,7 +13,7 @@ spec:
             [
               "sh",
               "-c",
-              'mongoimport --jsonArray --uri "mongodb://{{ .Values.mongodb.secret.username }}:{{ .Values.mongodb.secret.password }}@mongo:{{ .Values.mongodb.service.port }}/{{ .Values.mongodb.config.database }}?authSource=admin" --file /tmp/cohorts.json --collection cohorts',
+              'mongoimport {{ if .Values.dataLoad.dropPreviousData }}--drop{{ end }} --jsonArray --uri "mongodb://{{ .Values.mongodb.secret.username }}:{{ .Values.mongodb.secret.password }}@mongo:{{ .Values.mongodb.service.port }}/{{ .Values.mongodb.config.database }}?authSource=admin" --file /tmp/cohorts.json --collection cohorts',
             ]
           volumeMounts:
             - name: mongo-data-volume

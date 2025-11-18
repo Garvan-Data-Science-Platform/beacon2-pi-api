@@ -51,3 +51,4 @@ beacon:
 
 dataLoad:
   dataConfigMapName: "cohort-data-cm"
+  dropPreviousData: true

@@ -41,7 +41,7 @@ org_name="Garvan Institute for Medical Research"
 org_description="Garvan Institute of Medical Research is one of Australia’s premier medical research institutes"
 org_adress = '384 Victoria Street, Darlinghurst NSW 2010, Australia'
 org_welcome_url="https://garvan.org.au"
-org_contact_url="mailto:dsp@garvan.org.au"
+org_contact_url="mailto:cardinal@populationgenomics.org.au"
 org_logo_url="https://images.contentstack.io/v3/assets/blt324fd0a04af716e6/blt3f0048229394c515/6405de96205f2b7a60b745d6/gimr-logo.png"
 org_info = ''
 
