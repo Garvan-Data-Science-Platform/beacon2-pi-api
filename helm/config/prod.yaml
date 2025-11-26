@@ -29,3 +29,5 @@ mongodb:
   selectorLabel: "mongo"
   persistence:
     storageClass: "standard-rwo"
+
+environment: "prod"

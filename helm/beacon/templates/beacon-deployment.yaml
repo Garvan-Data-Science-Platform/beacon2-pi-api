@@ -9,6 +9,8 @@ spec:
       app: {{ .Values.beacon.selectorLabel }}
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmaps.yaml") . | sha256sum }}
       labels:
         app: {{ .Values.beacon.selectorLabel }}
     spec:
