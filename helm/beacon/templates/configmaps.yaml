@@ -37,8 +37,8 @@ data:
     environment = '{{ .Values.environment | default "test" }}'
     description = r"This Beacon is an experimental cohort-level beacon."
     version = api_version_yaml['api_version']
-    welcome_url = 'https://{{ .Values.ingress.host }}'
-    alternative_url = 'https://{{ .Values.ingress.host }}/api'
+    welcome_url = 'https://{{ .Values.ingress.host }}/api/info'
+    alternative_url = 'https://{{ .Values.ingress.host }}/api/info'
     create_datetime = '2025-11-06T12:00:00.000000'
     update_datetime = ''
     default_beacon_granularity = "boolean" # boolean, count or record
@@ -53,7 +53,7 @@ data:
     
     # Organization info
     org_id="Garvan"
-    org_name="Garvan Institute for Medical Research"
+    org_name="Garvan Institute of Medical Research"
     org_description="Garvan Institute of Medical Research is one of Australia’s premier medical research institutes"
     org_adress = '384 Victoria Street, Darlinghurst NSW 2010, Australia'
     org_welcome_url="https://garvan.org.au"
