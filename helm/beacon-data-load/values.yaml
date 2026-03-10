@@ -1,7 +1,7 @@
 # Values for beacon helm deployment
 
 mongodb:
-  selelectorLabel: "mongo"
+  selectorLabel: "mongo"
   replicaCount: 1
 
   image:

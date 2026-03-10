@@ -10,6 +10,7 @@ beacon:
 ingress:
   enabled: true
   host: "dev.beacon.dsp.garvan.org.au"
+  frontendConfigName: "beacon-dev-frontend-config"
   backendConfigName: "beacon-dev-iap-config"
   managedCertName: "beacon-dev-ssl-cert"
   staticIpName: "beacon-dev-static-ip"
@@ -30,4 +31,4 @@ mongodb:
   persistence:
     storageClass: "standard-rwo"
 
-environment: "env"
+environment: "dev"

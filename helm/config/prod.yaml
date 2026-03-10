@@ -10,6 +10,7 @@ beacon:
 ingress:
   enabled: true
   host: "beacon.dsp.garvan.org.au"
+  frontendConfigName: "beacon-prod-frontend-config"
   backendConfigName: "beacon-prod-health-config"
   managedCertName: "beacon-prod-ssl-cert"
   staticIpName: "beacon-prod-static-ip"
