@@ -1,0 +1,54 @@
+# Values for beacon helm deployment
+
+mongodb:
+  selelectorLabel: "mongo"
+  replicaCount: 1
+
+  image:
+    repository: "mongo"
+    tag: "5"
+
+  service:
+    port: 27017
+
+  config:
+    database: "beacon"
+    initScriptConfigMap: "mongo-init-cm"
+    wiredTigerCacheSizeGB: "1.0"
+
+  secret:
+    enabled: true # only for local dev
+    name: "mongo-secret"
+    username: "root"
+    password: "example"
+
+  persistence:
+    enabled: true
+    storageClass: "" # "standard-rwo" for GKE
+    size: 2Gi
+
+  localDev:
+    createHostPathPV: true # Only for local dev
+    hostPath: "/mnt/data/mongo" # This path must exist in local minikube cluster
+
+beacon:
+  selectorLabel: "beaconprod"
+  replicaCount: 1
+
+  image:
+    repository: "docker.io/library/beacon2-pi-api-beaconprod" # Locally built image
+    tag: "latest"
+    pullPolicy: "Always"
+
+  service:
+    type: "NodePort"
+    port: 5050
+    nodePort: 30050 # only for local dev
+
+  config:
+    configMapName: "beacon-config-cm"
+    permissionsMapName: "beacon-permissions-cm"
+    handoversMapName: "beacon-handovers-cm"
+
+ingress:
+  enabled: false

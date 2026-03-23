@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.dataLoad.dataConfigMapName }}
+data:
+  cohorts.json: |
+{{- .Files.Get "files/cohorts.json" | nindent 4 }}
+

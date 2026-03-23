@@ -1,0 +1,15 @@
+{{- if .Values.mongodb.localDev.createHostPathPV -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-mongo-pv
+spec:
+  capacity:
+    storage: {{ .Values.mongodb.persistence.size }}
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: {{ .Values.mongodb.localDev.hostPath }}
+{{- end -}}
+

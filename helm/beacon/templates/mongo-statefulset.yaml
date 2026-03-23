@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-db
+spec:
+  serviceName: mongo
+  replicas: {{ .Values.mongodb.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.mongodb.selectorLabel }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.mongodb.selectorLabel }}
+    spec:
+      containers:
+        - name: mongoprod
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+          args:
+            - "--wiredTigerCacheSizeGB"
+            - {{ .Values.mongodb.config.wiredTigerCacheSizeGB | quote }}
+            - "--bind_ip"
+            - "0.0.0.0"
+          ports:
+            - containerPort: {{ .Values.mongodb.service.port }}
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mongodb.secret.name | default (printf "%s-secret" .Release.Name)}}
+                  key: MONGO_INITDB_ROOT_USERNAME
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mongodb.secret.name | default (printf "%s-secret" .Release.Name)}}
+                  key: MONGO_INITDB_ROOT_PASSWORD
+            - name: MONGO_INITDB_DATABASE
+              value: {{ .Values.mongodb.config.database | quote }}
+          volumeMounts:
+            - name: mongo-persistent-storage
+              mountPath: /data/db
+            - name: mongo-init-script
+              mountPath: /docker-entrypoint-initdb.d/init.js
+              subPath: init.js
+              readOnly: true
+      volumes:
+        - name: mongo-init-script
+          configMap:
+            name: {{ .Values.mongodb.config.initScriptConfigMap }}
+  {{- if .Values.mongodb.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-persistent-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: {{ .Values.mongodb.persistence.storageClass | quote }}
+        resources:
+          requests:
+            storage: {{ .Values.mongodb.persistence.size }}
+  {{- end }}

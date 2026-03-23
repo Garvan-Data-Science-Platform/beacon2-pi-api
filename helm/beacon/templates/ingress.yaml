@@ -1,0 +1,36 @@
+{{- /* GKE Ingress resource, only enabled if ingress.enabled = true in your values file or config */ -}}
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.staticIpName | quote }}
+    networking.gke.io/managed-certificates: {{ .Values.ingress.managedCertName | quote }}
+    networking.gke.io/ssl-redirect: "true"
+    {{- if .Values.ingress.frontendConfigName }}
+    networking.gke.io/v1beta1.FrontendConfig: {{ .Values.ingress.frontendConfigName | quote }}
+    {{- end }}
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.allow-http: "true"
+spec:
+  ingressClassName: "gce"
+  defaultBackend:
+    service:
+      name: {{ .Release.Name }}-beacon-service
+      port:
+        number: {{ .Values.beacon.service.port }}
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          {{- range .Values.ingress.allowedPaths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ $.Release.Name }}-beacon-service
+                port:
+                  number: {{ $.Values.beacon.service.port }}
+          {{- end }}
+{{- end }}

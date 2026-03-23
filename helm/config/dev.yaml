@@ -1,0 +1,34 @@
+beacon:
+  image:
+    repository: "australia-southeast1-docker.pkg.dev/beacon-guardians/beacon-images/beacon-app"
+    tag: "v1"
+
+  service:
+    # type: ClusterIP
+    nodePort: null
+
+ingress:
+  enabled: true
+  host: "dev.beacon.dsp.garvan.org.au"
+  frontendConfigName: "beacon-dev-frontend-config"
+  backendConfigName: "beacon-dev-iap-config"
+  managedCertName: "beacon-dev-ssl-cert"
+  staticIpName: "beacon-dev-static-ip"
+  allowedPaths:
+    - path: /*
+      pathType: ImplementationSpecific
+  #   - path: /api
+  #     pathType: Exact
+
+  #   - path: /api/cohorts
+  #     pathType: Prefix
+
+localDev:
+  createHostPathPV: false
+
+mongodb:
+  selectorLabel: "mongo"
+  persistence:
+    storageClass: "standard-rwo"
+
+environment: "dev"
